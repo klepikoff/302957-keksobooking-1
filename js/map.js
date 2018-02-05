@@ -34,6 +34,7 @@ var BOOK_TYPE_NAME = {
 var BOOK_FEATURE = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var BOOK_AVATAR = ['01', '02', '03', '04', '05', '06', '07', '08'];
 var BOOK_TIME = ['12:00', '13:00', '14:00'];
+var BOOK_PHOTO = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
 var PIN_WIDTH = 62;
 var PIN_HEIGHT = 84;
@@ -62,7 +63,7 @@ for (var i = 0; i < 8; i++) {
       checkout: getRandomValue(BOOK_TIME),
       features: getRandomArray(BOOK_FEATURE),
       description: ' ',
-      photos: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
+      photos: getRandomArray(BOOK_PHOTO)
     },
     location: {
       x: addrX,
@@ -80,7 +81,7 @@ for (i = 0; i < 8; i++) {
   var fragment = document.createDocumentFragment();
 
 
-  template.setAttribute('style', 'left: ' + (book[i].location.x + PIN_WIDTH / 2) + 'px; top: ' + (book[i].location.y + PIN_HEIGHT) + 'px');
+  template.setAttribute('style', 'left: ' + (book[i].location.x - PIN_WIDTH / 2) + 'px; top: ' + (book[i].location.y - PIN_HEIGHT) + 'px');
   template.querySelector('img').setAttribute('src', book[i].author.avatar);
 
   fragment.appendChild(template);
@@ -147,7 +148,6 @@ for (i = 0; i < 3; i++) {
   popupPhoto.querySelector('img').setAttribute('width', '35px');
   popupPhoto.querySelector('img').setAttribute('heigth', '30px');
 }
-
 
 // заменили аватар
 articlePopup.querySelector('img').setAttribute('src', book[0].author.avatar);
