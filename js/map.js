@@ -3,9 +3,11 @@
 function getRandomValue(arrayValues) {
   return arrayValues[Math.floor(Math.random() * arrayValues.length)];
 }
+
 function getUniqueValue(arrayValues) {
   return arrayValues.splice(randomInteger(0, arrayValues.length - 1), 1)[0];
 }
+
 function randomInteger(min, max) {
   return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 }
@@ -19,10 +21,6 @@ function getRandomArray(arrayValues) {
   }
   return newArray;
 }
-/*
-function removeElem(element, place, select) {
-  return place.querySelector('select').removeChild(element);
-}*/
 
 var BOOK_TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var BOOK_TYPE = ['flat', 'house', 'bungalo'];
@@ -38,6 +36,7 @@ var BOOK_PHOTO = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://
 
 var PIN_WIDTH = 62;
 var PIN_HEIGHT = 84;
+
 // задание 2
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
@@ -54,7 +53,7 @@ for (var i = 0; i < 8; i++) {
     },
     offer: {
       title: getUniqueValue(BOOK_TITLE),
-      address: addrX + ' ,' + addrY,
+      address: addrX + ', ' + addrY,
       price: randomInteger(1000, 1000000),
       type: getRandomValue(BOOK_TYPE),
       rooms: randomInteger(1, 5),
@@ -62,7 +61,7 @@ for (var i = 0; i < 8; i++) {
       checkin: getRandomValue(BOOK_TIME),
       checkout: getRandomValue(BOOK_TIME),
       features: getRandomArray(BOOK_FEATURE),
-      description: ' ',
+      description: '',
       photos: getRandomArray(BOOK_PHOTO)
     },
     location: {
@@ -79,7 +78,6 @@ var pinsTemplate = document.querySelector('template').content.querySelector('.ma
 for (i = 0; i < 8; i++) {
   var template = pinsTemplate.cloneNode(true);
   var fragment = document.createDocumentFragment();
-
 
   template.setAttribute('style', 'left: ' + (book[i].location.x - PIN_WIDTH / 2) + 'px; top: ' + (book[i].location.y - PIN_HEIGHT) + 'px');
   template.querySelector('img').setAttribute('src', book[i].author.avatar);
@@ -111,7 +109,7 @@ articlePopup.querySelector('h3').textContent = book[0].offer.title;
 articlePopup.querySelector('small').textContent = book[0].offer.address;
 
 // заменили цену
-articlePopup.querySelector('.popup__price').textContent = book[0].offer.price + ' Р/ночь';
+articlePopup.querySelector('.popup__price').textContent = book[0].offer.price + '₽/ночь';
 
 // заменили тип жилья
 articlePopup.querySelector('h4').textContent = BOOK_TYPE_NAME[book[0].offer.type];
