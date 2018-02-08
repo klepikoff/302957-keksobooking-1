@@ -95,57 +95,66 @@ elem.className = 'new_map__card';
 elemParent.insertBefore(elem, elemBefore);
 
 var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
-var articlePopup = articleTemplatePopup.cloneNode(true);
 
-var fragmentPopup = document.createDocumentFragment();
-fragmentPopup.appendChild(articlePopup);
+function renderPopup(anyBook) {
+  var articlePopup = articleTemplatePopup.cloneNode(true);
 
-elem.appendChild(fragmentPopup);
+  //  заменили название
+  articlePopup.querySelector('h3').textContent = anyBook.offer.title;
 
-// заменили название
-articlePopup.querySelector('h3').textContent = book[0].offer.title;
+  // заменили адрес
+  articlePopup.querySelector('small').textContent = anyBook.offer.address;
 
-// заменили адрес
-articlePopup.querySelector('small').textContent = book[0].offer.address;
+  // заменили цену
+  articlePopup.querySelector('.popup__price').textContent = anyBook.offer.price + '₽/ночь';
 
-// заменили цену
-articlePopup.querySelector('.popup__price').textContent = book[0].offer.price + '₽/ночь';
+  // заменили тип жилья
+  articlePopup.querySelector('h4').textContent = BOOK_TYPE_NAME[anyBook.offer.type];
 
-// заменили тип жилья
-articlePopup.querySelector('h4').textContent = BOOK_TYPE_NAME[book[0].offer.type];
+  // заменили количества комнат и гостей, nth-child не работает
+  articlePopup.querySelector('p:nth-of-type(3)').textContent = anyBook.offer.rooms + ' комнаты для ' + anyBook.offer.guests + ' гостей';
 
-// заменили количества комнат и гостей, nth-child не работает
-articlePopup.querySelector('p:nth-of-type(3)').textContent = book[0].offer.rooms + ' комнаты для ' + book[0].offer.guests + ' гостей';
+  // заменили время приезда-выезда
+  articlePopup.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + anyBook.offer.checkin + ', выезд до ' + anyBook.offer.checkout;
 
-// заменили время приезда-выезда
-articlePopup.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + book[0].offer.checkin + ', выезд до ' + book[0].offer.checkout;
+  // заменили удобства
+  var articlePopupFeatures = articlePopup.querySelector('.popup__features');
 
-// заменили удобства
-var articlePopupFeatures = articlePopup.querySelector('.popup__features');
+  for (i = 0; i < 6; i++) {
+    articlePopupFeatures.removeChild(articlePopup.querySelector('li'));
+  }
 
-for (i = 0; i < 6; i++) {
-  articlePopupFeatures.removeChild(articlePopup.querySelector('li'));
+  for (i = 0; i < anyBook.offer.features.length; i++) {
+    var li = document.createElement('li');
+    li.className = 'feature feature--' + anyBook.offer.features[i];
+    articlePopupFeatures.appendChild(li);
+  }
+  // заменили описание
+  articlePopup.querySelector('p:nth-of-type(5)').textContent = anyBook.offer.description;
+
+  // добавили фотографии
+  var popupPhoto = articlePopup.querySelector('.popup__pictures');
+
+  for (i = 0; i < randomInteger(1, 3); i++) {
+    var popupPhotoCopy = popupPhoto.querySelector('li').cloneNode(true);
+    popupPhoto.appendChild(popupPhotoCopy);
+
+    popupPhoto.querySelector('img').setAttribute('src', anyBook.offer.photos[i]);
+    popupPhoto.querySelector('img').setAttribute('width', '35px');
+    popupPhoto.querySelector('img').setAttribute('heigth', '30px');
+  }
+
+  // заменили аватар
+  articlePopup.querySelector('img').setAttribute('src', anyBook.author.avatar);
+
+  return articlePopup;
 }
+for (i = 0; i < 1; i++) {
+  fragment = document.createDocumentFragment();
+  fragment.appendChild(renderPopup(book[i]));
 
-for (i = 0; i < book[0].offer.features.length; i++) {
-  var li = document.createElement('li');
-  li.className = 'feature feature--' + book[0].offer.features[i];
-  articlePopupFeatures.appendChild(li);
+  var fragmentPopup = document.createDocumentFragment();
+  fragmentPopup.appendChild(renderPopup(book[i]));
+
+  elem.appendChild(fragmentPopup);
 }
-// заменили описание
-articlePopup.querySelector('p:nth-of-type(5)').textContent = book[0].offer.description;
-
-// добавили фотографии
-var popupPhoto = articlePopup.querySelector('.popup__pictures');
-
-for (i = 0; i < 3; i++) {
-  var popupPhotoCopy = popupPhoto.querySelector('li').cloneNode(true);
-  popupPhoto.appendChild(popupPhotoCopy);
-
-  popupPhoto.querySelector('img').setAttribute('src', book[0].offer.photos[i]);
-  popupPhoto.querySelector('img').setAttribute('width', '35px');
-  popupPhoto.querySelector('img').setAttribute('heigth', '30px');
-}
-
-// заменили аватар
-articlePopup.querySelector('img').setAttribute('src', book[0].author.avatar);
