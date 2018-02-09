@@ -135,7 +135,7 @@ function renderPopup(anyBook) {
   // добавили фотографии
   var popupPhoto = articlePopup.querySelector('.popup__pictures');
 
-  for (i = 0; i < randomInteger(1, 3); i++) {
+  for (i = 0; i < randomInteger(1, anyBook.offer.photos.length); i++) {
     var popupPhotoCopy = popupPhoto.querySelector('li').cloneNode(true);
     popupPhoto.appendChild(popupPhotoCopy);
 
@@ -149,12 +149,10 @@ function renderPopup(anyBook) {
 
   return articlePopup;
 }
-for (i = 0; i < 1; i++) {
-  fragment = document.createDocumentFragment();
-  fragment.appendChild(renderPopup(book[i]));
 
-  var fragmentPopup = document.createDocumentFragment();
-  fragmentPopup.appendChild(renderPopup(book[i]));
+fragment = document.createDocumentFragment();
+fragment.appendChild(renderPopup(book[0]));
 
-  elem.appendChild(fragmentPopup);
-}
+var fragmentPopup = document.createDocumentFragment();
+fragmentPopup.appendChild(renderPopup(book[0]));
+elem.appendChild(fragmentPopup);
