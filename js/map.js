@@ -163,9 +163,6 @@ var address = document.getElementById('address');
 var newAddressTop = getComputedStyle(mapPin, null).getPropertyValue('top');
 var newAddressLeft = getComputedStyle(mapPin, null).getPropertyValue('left');
 
-console.log(newAddressTop);
-console.log(newAddressLeft);
-
 mapPin.addEventListener('mouseup', function () {
   map.classList.remove('map--faded');
   document.querySelector('.notice__form').classList.remove('notice__form--disabled');
