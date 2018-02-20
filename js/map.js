@@ -1,5 +1,6 @@
 'use strict';
 
+// module3-task1
 function getRandomValue(arrayValues) {
   return arrayValues[Math.floor(Math.random() * arrayValues.length)];
 }
@@ -153,3 +154,22 @@ function renderPopup(anyBook) {
 var fragmentPopup = document.createDocumentFragment();
 fragmentPopup.appendChild(renderPopup(book[0]));
 elem.appendChild(fragmentPopup);
+
+// module4-task1
+// document.querySelector('input').setAttribute('disabled', 'disabled');
+
+var mapPin = document.querySelector('.map__pin--main');
+var address = document.getElementById('address');
+var newAddressTop = getComputedStyle(mapPin, null).getPropertyValue('top');
+var newAddressLeft = getComputedStyle(mapPin, null).getPropertyValue('left');
+
+console.log(newAddressTop);
+console.log(newAddressLeft);
+
+mapPin.addEventListener('mouseup', function () {
+  map.classList.remove('map--faded');
+  document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+  document.querySelector('.notice__form').removeAttribute('disabled');
+  address.setAttribute('value', newAddressTop + ', ' + newAddressLeft);
+  address.setAttribute('required', 'required');
+});
