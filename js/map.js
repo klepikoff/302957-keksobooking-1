@@ -162,13 +162,6 @@ document.querySelector('fieldset').setAttribute('disabled', 'disabled');
 var mapPin = document.querySelector('.map__pin--main');
 var address = document.getElementById('address');
 
-// var newAddressTop = getComputedStyle(mapPin, null).getPropertyValue('top');
-
-// getBoundingClientRect
-
-// var newAddressTop = getComputedStyle(mapPin, null).getPropertyValue('top');
-// var newAddressLeft = getComputedStyle(mapPin, null).getPropertyValue('left');
-
 mapPin.addEventListener('mouseup', function () {
   map.classList.remove('map--faded');
   document.querySelector('.notice__form').classList.remove('notice__form--disabled');
@@ -179,9 +172,9 @@ mapPin.addEventListener('mouseup', function () {
 });
 
 var parentPin = document.querySelector('.map__pins');
-parentPin.addEventListener('mouseup', function (evt) {
+parentPin.addEventListener('click', function (evt) {
   for (i = 2; i <= NUMBER_PINS + 1; i++) {
-    var targetPinButton = parentPin.querySelector('.map__pin:nth-of-type(' + i + ')');
+    var targetPinButton = parentPin.querySelector('.map__pin:nth-of-type(' + i + ')'); /* !!!*/
     var targetPinButtonImg = targetPinButton.querySelector('img');
     if (evt.target === targetPinButton) {
       var mapPinButtonImage = evt.target.querySelector('img');
