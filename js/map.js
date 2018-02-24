@@ -22,6 +22,7 @@ function getRandomArray(arrayValues) {
   }
   return newArray;
 }
+var NUMBER_PINS = 8;
 
 var BOOK_TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var BOOK_TYPE = ['flat', 'house', 'bungalo'];
@@ -44,7 +45,7 @@ map.classList.remove('map--faded');
 
 // задание 1
 var book = [];
-for (var i = 0; i < 8; i++) {
+for (var i = 0; i < NUMBER_PINS; i++) {
   var addrX = randomInteger(300, 900);
   var addrY = randomInteger(150, 500);
 
@@ -76,7 +77,7 @@ for (var i = 0; i < 8; i++) {
 var pinsOnMap = map.querySelector('.map__pins');
 var pinsTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-for (i = 0; i < 8; i++) {
+for (i = 0; i < NUMBER_PINS; i++) {
   var template = pinsTemplate.cloneNode(true);
   var fragment = document.createDocumentFragment();
 
@@ -156,17 +157,45 @@ fragmentPopup.appendChild(renderPopup(book[0]));
 elem.appendChild(fragmentPopup);
 
 // module4-task1
-// document.querySelector('input').setAttribute('disabled', 'disabled');
+document.querySelector('fieldset').setAttribute('disabled', 'disabled');
 
 var mapPin = document.querySelector('.map__pin--main');
 var address = document.getElementById('address');
-var newAddressTop = getComputedStyle(mapPin, null).getPropertyValue('top');
-var newAddressLeft = getComputedStyle(mapPin, null).getPropertyValue('left');
+
+// var newAddressTop = getComputedStyle(mapPin, null).getPropertyValue('top');
+
+// getBoundingClientRect
+
+// var newAddressTop = getComputedStyle(mapPin, null).getPropertyValue('top');
+// var newAddressLeft = getComputedStyle(mapPin, null).getPropertyValue('left');
 
 mapPin.addEventListener('mouseup', function () {
   map.classList.remove('map--faded');
   document.querySelector('.notice__form').classList.remove('notice__form--disabled');
   document.querySelector('.notice__form').removeAttribute('disabled');
-  address.setAttribute('value', newAddressTop + ', ' + newAddressLeft);
-  address.setAttribute('required', 'required');
+  var newAddressLeft = mapPin.getBoundingClientRect().left - PIN_WIDTH / 2;
+  var newAddressTop = mapPin.getBoundingClientRect().top + PIN_HEIGHT / 2;
+  address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
+});
+
+var parentPin = document.querySelector('.map__pins');
+parentPin.addEventListener('mouseup', function (evt) {
+  for (i = 2; i <= NUMBER_PINS + 1; i++) {
+    var targetPinButton = parentPin.querySelector('.map__pin:nth-of-type(' + i + ')');
+    var targetPinButtonImg = targetPinButton.querySelector('img');
+    if (evt.target === targetPinButton) {
+      var mapPinButtonImage = evt.target.querySelector('img');
+      var mapPinAvatar = mapPinButtonImage.getAttribute('src');
+      document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
+      var mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
+      var mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
+      document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
+    } else if (evt.target === targetPinButtonImg) {
+      mapPinAvatar = evt.target.getAttribute('src');
+      document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
+      mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
+      mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
+      document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
+    }
+  }
 });
