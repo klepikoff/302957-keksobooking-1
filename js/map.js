@@ -176,7 +176,7 @@ mapPin.addEventListener('mouseup', function () {
 var parentPin = document.querySelector('.map__pins');
 parentPin.addEventListener('click', function (evt) {
   if (evt.target.dataset.pinId !== void 0) {
-    renderPopup(book[evt.target.dataset.pinId]);
+    renderPopup(book[parseInt(evt.target.dataset.pinId, 10)]);
   }
 
 
