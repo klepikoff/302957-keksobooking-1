@@ -163,66 +163,25 @@ document.querySelector('fieldset').setAttribute('disabled', 'disabled');
 var mapPin = document.querySelector('.map__pin--main');
 var address = document.getElementById('address');
 
-mapPin.addEventListener('mouseup', function () {
+mapPin.addEventListener('mouseup', function (evt) {
   map.classList.remove('map--faded');
   document.querySelector('.notice__form').classList.remove('notice__form--disabled');
   document.querySelector('.notice__form').removeAttribute('disabled');
-  var newAddressLeft = mapPin.getBoundingClientRect().left - PIN_WIDTH / 2;
-  var newAddressTop = mapPin.getBoundingClientRect().top + PIN_HEIGHT / 2;
+  var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
+  var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
   address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
 });
 
 var parentPin = document.querySelector('.map__pins');
 parentPin.addEventListener('click', function (evt) {
-  var targetPin = evt.currentTarget.querySelector('.map__pin');
+  // тут надо проверять что если клик по button, то в targetPin надо записать target
+  var targetPin = evt.target;
+  // если клик бы по img, то надо
+  if (targetPin.tagName === 'IMG') {
+    targetPin = targetPin.parentElement;
+  }
+
   if (targetPin.dataset.pinId !== void 0) {
     renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
   }
-
-
-  // for (i = 2; i <= NUMBER_PINS + 1; i++) {
-  //   var targetPinButton = parentPin.querySelector('.map__pin:nth-of-type(' + i + ')'); /* !!!*/
-  //   var targetPinButtonImg = targetPinButton.querySelector('img');
-  //   if (evt.target === targetPinButton) {
-  //     var mapPinButtonImage = evt.target.querySelector('img');
-  //     var mapPinAvatar = mapPinButtonImage.getAttribute('src');
-  //     document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
-  //     var mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
-  //     var mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
-  //     document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
-  //   } else if (evt.target === targetPinButtonImg) {
-  //     mapPinAvatar = evt.target.getAttribute('src');
-  //     document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
-  //     mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
-  //     mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
-  //     document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
-  //   }
-  // }
-});
-
-// module4-task2
-var appartmentPrice = document.getElementById('price');
-var appartmentAddress = document.getElementById('address');
-
-var appartmentTimeIn = document.getElementById('timein').querySelector('option').getAttribute('value');
-var appartmentTimeOut = document.getElementById('timeout').querySelector('option').getAttribute('value');
-
-var appartmentPriceMin = 0;
-var appartmentType = document.getElementById('type').querySelector('option').getAttribute('value');
-
-// 2.3 Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»
-if (appartmentType === 'flat') {
-  appartmentPriceMin = 1000;
-} else if (appartmentType === 'bungalo') {
-  appartmentPriceMin = 0;
-} else if (appartmentType === 'house') {
-  appartmentPriceMin = 5000;
-} else if (appartmentType === 'palace') {
-  appartmentPriceMin = 10000;
-}
-appartmentPrice.setAttribute('min', appartmentPriceMin);
-
-// Поля «Время заезда» и «Время выезда», при изменении значения одного поля, во втором выделяется соответствующее ему.
-document.getElementById('timein').addEventListener('click', function () {
-  appartmentTimeOut = appartmentTimeIn;
 });
