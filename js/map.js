@@ -84,6 +84,8 @@ for (i = 0; i < NUMBER_PINS; i++) {
   template.setAttribute('style', 'left: ' + (book[i].location.x - PIN_WIDTH / 2) + 'px; top: ' + (book[i].location.y - PIN_HEIGHT) + 'px');
   template.querySelector('img').setAttribute('src', book[i].author.avatar);
 
+  template.dataset.pinId = i;
+
   fragment.appendChild(template);
   pinsOnMap.appendChild(fragment);
 }
@@ -173,22 +175,54 @@ mapPin.addEventListener('mouseup', function () {
 
 var parentPin = document.querySelector('.map__pins');
 parentPin.addEventListener('click', function (evt) {
-  for (i = 2; i <= NUMBER_PINS + 1; i++) {
-    var targetPinButton = parentPin.querySelector('.map__pin:nth-of-type(' + i + ')'); /* !!!*/
-    var targetPinButtonImg = targetPinButton.querySelector('img');
-    if (evt.target === targetPinButton) {
-      var mapPinButtonImage = evt.target.querySelector('img');
-      var mapPinAvatar = mapPinButtonImage.getAttribute('src');
-      document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
-      var mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
-      var mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
-      document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
-    } else if (evt.target === targetPinButtonImg) {
-      mapPinAvatar = evt.target.getAttribute('src');
-      document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
-      mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
-      mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
-      document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
-    }
+  if (evt.target.dataset.pinId !== void 0) {
+    renderPopup(book[evt.target.dataset.pinId]);
   }
+
+
+  // for (i = 2; i <= NUMBER_PINS + 1; i++) {
+  //   var targetPinButton = parentPin.querySelector('.map__pin:nth-of-type(' + i + ')'); /* !!!*/
+  //   var targetPinButtonImg = targetPinButton.querySelector('img');
+  //   if (evt.target === targetPinButton) {
+  //     var mapPinButtonImage = evt.target.querySelector('img');
+  //     var mapPinAvatar = mapPinButtonImage.getAttribute('src');
+  //     document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
+  //     var mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
+  //     var mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
+  //     document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
+  //   } else if (evt.target === targetPinButtonImg) {
+  //     mapPinAvatar = evt.target.getAttribute('src');
+  //     document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
+  //     mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
+  //     mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
+  //     document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
+  //   }
+  // }
+});
+
+// module4-task2
+var appartmentPrice = document.getElementById('price');
+var appartmentAddress = document.getElementById('address');
+
+var appartmentTimeIn = document.getElementById('timein').querySelector('option').getAttribute('value');
+var appartmentTimeOut = document.getElementById('timeout').querySelector('option').getAttribute('value');
+
+var appartmentPriceMin = 0;
+var appartmentType = document.getElementById('type').querySelector('option').getAttribute('value');
+
+// 2.3 Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»
+if (appartmentType === 'flat') {
+  appartmentPriceMin = 1000;
+} else if (appartmentType === 'bungalo') {
+  appartmentPriceMin = 0;
+} else if (appartmentType === 'house') {
+  appartmentPriceMin = 5000;
+} else if (appartmentType === 'palace') {
+  appartmentPriceMin = 10000;
+}
+appartmentPrice.setAttribute('min', appartmentPriceMin);
+
+// Поля «Время заезда» и «Время выезда», при изменении значения одного поля, во втором выделяется соответствующее ему.
+document.getElementById('timein').addEventListener('click', function () {
+  appartmentTimeOut = appartmentTimeIn;
 });
