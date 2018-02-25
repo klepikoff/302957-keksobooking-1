@@ -151,12 +151,11 @@ function renderPopup(anyBook) {
   // заменили аватар
   articlePopup.querySelector('img').setAttribute('src', anyBook.author.avatar);
 
-  return articlePopup;
+  var fragmentPopup = document.createDocumentFragment();
+  fragmentPopup.appendChild(articlePopup);
+  elem.appendChild(fragmentPopup);
 }
 
-var fragmentPopup = document.createDocumentFragment();
-fragmentPopup.appendChild(renderPopup(book[0]));
-elem.appendChild(fragmentPopup);
 
 // module4-task1
 document.querySelector('fieldset').setAttribute('disabled', 'disabled');
@@ -175,8 +174,9 @@ mapPin.addEventListener('mouseup', function () {
 
 var parentPin = document.querySelector('.map__pins');
 parentPin.addEventListener('click', function (evt) {
-  if (evt.target.dataset.pinId !== void 0) {
-    renderPopup(book[parseInt(evt.target.dataset.pinId, 10)]);
+  var targetPin = evt.currentTarget.querySelector('.map__pin');
+  if (targetPin.dataset.pinId !== void 0) {
+    renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
   }
 
 
