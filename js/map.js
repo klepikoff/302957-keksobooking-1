@@ -163,7 +163,7 @@ document.querySelector('fieldset').setAttribute('disabled', 'disabled');
 var mapPin = document.querySelector('.map__pin--main');
 var address = document.getElementById('address');
 
-mapPin.addEventListener('mouseup', function (evt) {
+mapPin.addEventListener('mouseup', function () {
   map.classList.remove('map--faded');
   document.querySelector('.notice__form').classList.remove('notice__form--disabled');
   document.querySelector('.notice__form').removeAttribute('disabled');
