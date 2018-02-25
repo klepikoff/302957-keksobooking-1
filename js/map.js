@@ -158,8 +158,6 @@ function renderPopup(anyBook) {
 
 
 // module4-task1
-document.querySelector('fieldset').setAttribute('disabled', 'disabled');
-
 var mapPin = document.querySelector('.map__pin--main');
 var address = document.getElementById('address');
 
@@ -174,9 +172,7 @@ mapPin.addEventListener('mouseup', function () {
 
 var parentPin = document.querySelector('.map__pins');
 parentPin.addEventListener('click', function (evt) {
-  // тут надо проверять что если клик по button, то в targetPin надо записать target
   var targetPin = evt.target;
-  // если клик бы по img, то надо
   if (targetPin.tagName === 'IMG') {
     targetPin = targetPin.parentElement;
   }
