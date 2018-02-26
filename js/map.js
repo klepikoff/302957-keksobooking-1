@@ -198,8 +198,6 @@ var appartmentPrice = document.getElementById('price');
 
 var selectType = document.getElementById('type');
 
-// var selectRoomNumber = document.getElementById('room_number');
-
 // 2.3 Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»
 
 selectType.addEventListener('change', function () {
@@ -246,4 +244,51 @@ document.getElementById('timeout').addEventListener('change', function () {
   addSelectedIn.setAttribute('selected', 'selected');
 });
 
-// console.log(selectRoomNumber.validity)
+// 2.6. Поле «Количество комнат» синхронизировано с полем «Количество гостей» таким образом, что при
+// выборе количества комнат вводятся ограничения на допустимые варианты выбора количества гостей:
+
+var selectRoomNumber = document.getElementById('room_number');
+var accessCapacity = document.getElementById('capacity');
+
+selectRoomNumber.addEventListener('change', function () {
+  var selectedRoomNumber = selectRoomNumber.options[selectRoomNumber.selectedIndex].value;
+  var roomForOne = accessCapacity.querySelector('option[value="1"]');
+  var roomForTwo = accessCapacity.querySelector('option[value="2"]');
+  var roomForThree = accessCapacity.querySelector('option[value="3"]');
+  var roomForNbd = accessCapacity.querySelector('option[value="0"]');
+
+  roomForOne.removeAttribute('disabled');
+  roomForTwo.removeAttribute('disabled');
+  roomForThree.removeAttribute('disabled');
+  roomForNbd.removeAttribute('disabled');
+
+  if (selectedRoomNumber === '1') {
+    roomForOne.setAttribute('selected', 'selected');
+    roomForThree.setAttribute('disabled', 'disabled');
+    roomForTwo.setAttribute('disabled', 'disabled');
+    roomForNbd.setAttribute('disabled', 'disabled');
+  }
+
+  if (selectedRoomNumber === '2') {
+    roomForTwo.setAttribute('selected', 'selected');
+    roomForThree.setAttribute('disabled', 'disabled');
+    roomForNbd.setAttribute('disabled', 'disabled');
+  }
+
+  if (selectedRoomNumber === '3') {
+    roomForThree.setAttribute('selected', 'selected');
+    roomForNbd.setAttribute('disabled', 'disabled');
+  }
+
+  if (selectedRoomNumber === '100') {
+    roomForNbd.setAttribute('selected', 'selected');
+    roomForOne.setAttribute('disabled', 'disabled');
+    roomForTwo.setAttribute('disabled', 'disabled');
+    roomForThree.setAttribute('disabled', 'disabled');
+  }
+});
+
+/* 1 комната — «для 1 гостя»;
+2 комнаты — «для 2 гостей» или «для 1 гостя»;
+3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
+100 комнат — «не для гостей»; */
