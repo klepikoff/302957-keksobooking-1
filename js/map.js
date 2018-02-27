@@ -101,6 +101,7 @@ elemParent.insertBefore(elem, elemBefore);
 var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
 
 function renderPopup(anyBook) {
+
   var articlePopup = articleTemplatePopup.cloneNode(true);
 
   //  заменили название
@@ -168,10 +169,12 @@ mapPin.addEventListener('mouseup', function () {
   var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
   var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
   address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
+
 });
 
 var parentPin = document.querySelector('.map__pins');
 parentPin.addEventListener('click', function (evt) {
+
   var targetPin = evt.target;
   if (targetPin.tagName === 'IMG') {
     targetPin = targetPin.parentElement;
@@ -179,5 +182,10 @@ parentPin.addEventListener('click', function (evt) {
 
   if (targetPin.dataset.pinId !== void 0) {
     renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
+  }
+
+  var articlePopupAll = document.querySelectorAll('article.map__card');
+  if (articlePopupAll.length >= 2) {
+    articlePopupAll[0].remove();
   }
 });
