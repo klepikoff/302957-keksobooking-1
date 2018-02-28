@@ -84,6 +84,8 @@ for (i = 0; i < NUMBER_PINS; i++) {
   template.setAttribute('style', 'left: ' + (book[i].location.x - PIN_WIDTH / 2) + 'px; top: ' + (book[i].location.y - PIN_HEIGHT) + 'px');
   template.querySelector('img').setAttribute('src', book[i].author.avatar);
 
+  template.dataset.pinId = i;
+
   fragment.appendChild(template);
   pinsOnMap.appendChild(fragment);
 }
@@ -99,6 +101,7 @@ elemParent.insertBefore(elem, elemBefore);
 var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
 
 function renderPopup(anyBook) {
+
   var articlePopup = articleTemplatePopup.cloneNode(true);
 
   //  заменили название
@@ -149,16 +152,13 @@ function renderPopup(anyBook) {
   // заменили аватар
   articlePopup.querySelector('img').setAttribute('src', anyBook.author.avatar);
 
-  return articlePopup;
+  var fragmentPopup = document.createDocumentFragment();
+  fragmentPopup.appendChild(articlePopup);
+  elem.appendChild(fragmentPopup);
 }
 
-var fragmentPopup = document.createDocumentFragment();
-fragmentPopup.appendChild(renderPopup(book[0]));
-elem.appendChild(fragmentPopup);
 
 // module4-task1
-document.querySelector('fieldset').setAttribute('disabled', 'disabled');
-
 var mapPin = document.querySelector('.map__pin--main');
 var address = document.getElementById('address');
 
@@ -166,32 +166,30 @@ mapPin.addEventListener('mouseup', function () {
   map.classList.remove('map--faded');
   document.querySelector('.notice__form').classList.remove('notice__form--disabled');
   document.querySelector('.notice__form').removeAttribute('disabled');
-  var newAddressLeft = mapPin.getBoundingClientRect().left - PIN_WIDTH / 2;
-  var newAddressTop = mapPin.getBoundingClientRect().top + PIN_HEIGHT / 2;
+  var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
+  var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
   address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
+
 });
 
 var parentPin = document.querySelector('.map__pins');
 parentPin.addEventListener('click', function (evt) {
-  for (i = 2; i <= NUMBER_PINS + 1; i++) {
-    var targetPinButton = parentPin.querySelector('.map__pin:nth-of-type(' + i + ')'); /* !!!*/
-    var targetPinButtonImg = targetPinButton.querySelector('img');
-    if (evt.target === targetPinButton) {
-      var mapPinButtonImage = evt.target.querySelector('img');
-      var mapPinAvatar = mapPinButtonImage.getAttribute('src');
-      document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
-      var mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
-      var mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
-      document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
-    } else if (evt.target === targetPinButtonImg) {
-      mapPinAvatar = evt.target.getAttribute('src');
-      document.querySelector('.popup__avatar').setAttribute('src', mapPinAvatar);
-      mapPinButtonAddressLeft = evt.target.getBoundingClientRect().left - PIN_WIDTH / 2;
-      mapPinButtonAddressTop = evt.target.getBoundingClientRect().top + PIN_HEIGHT / 2;
-      document.querySelector('.map__card p').textContent = mapPinButtonAddressLeft + ', ' + mapPinButtonAddressTop;
-    }
+
+  var targetPin = evt.target;
+  if (targetPin.tagName === 'IMG') {
+    targetPin = targetPin.parentElement;
+  }
+
+  if (targetPin.dataset.pinId !== void 0) {
+    renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
+  }
+
+  var articlePopupAll = document.querySelectorAll('article.map__card');
+  if (articlePopupAll.length >= 2) {
+    articlePopupAll[0].remove();
   }
 });
+
 
 // module4-task2
 var appartmentPrice = document.getElementById('price');
@@ -252,43 +250,21 @@ var accessCapacity = document.getElementById('capacity');
 
 selectRoomNumber.addEventListener('change', function () {
   var selectedRoomNumber = selectRoomNumber.options[selectRoomNumber.selectedIndex].value;
-  var roomForOne = accessCapacity.querySelector('option[value="1"]');
-  var roomForTwo = accessCapacity.querySelector('option[value="2"]');
-  var roomForThree = accessCapacity.querySelector('option[value="3"]');
-  var roomForNbd = accessCapacity.querySelector('option[value="0"]');
 
-  roomForOne.removeAttribute('disabled');
-  roomForTwo.removeAttribute('disabled');
-  roomForThree.removeAttribute('disabled');
-  roomForNbd.removeAttribute('disabled');
-
-  if (selectedRoomNumber === '1') {
-    roomForOne.setAttribute('selected', 'selected');
-    roomForThree.setAttribute('disabled', 'disabled');
-    roomForTwo.setAttribute('disabled', 'disabled');
-    roomForNbd.setAttribute('disabled', 'disabled');
+  var allRooms = accessCapacity.querySelectorAll('option');
+  for (i = 0; i < allRooms.length; i++) {
+    allRooms[i].setAttribute('disabled', 'disabled');
+    allRooms[i].removeAttribute('selected');
   }
 
-  if (selectedRoomNumber === '2') {
-    roomForTwo.setAttribute('selected', 'selected');
-    roomForThree.setAttribute('disabled', 'disabled');
-    roomForNbd.setAttribute('disabled', 'disabled');
+  if (selectedRoomNumber <= 3) {
+    for (i = 1; i <= selectedRoomNumber; i++) {
+      accessCapacity.querySelector('option[value="' + i + '"]').removeAttribute('disabled');
+      accessCapacity.querySelector('option[value="' + i + '"]').setAttribute('selected', 'selected');
+    }
   }
-
-  if (selectedRoomNumber === '3') {
-    roomForThree.setAttribute('selected', 'selected');
-    roomForNbd.setAttribute('disabled', 'disabled');
-  }
-
-  if (selectedRoomNumber === '100') {
-    roomForNbd.setAttribute('selected', 'selected');
-    roomForOne.setAttribute('disabled', 'disabled');
-    roomForTwo.setAttribute('disabled', 'disabled');
-    roomForThree.setAttribute('disabled', 'disabled');
+  if (selectedRoomNumber >= 4) {
+    accessCapacity.querySelector('option[value="4"]').removeAttribute('disabled');
+    accessCapacity.querySelector('option[value="4"]').setAttribute('selected', 'selected');
   }
 });
-
-/* 1 комната — «для 1 гостя»;
-2 комнаты — «для 2 гостей» или «для 1 гостя»;
-3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
-100 комнат — «не для гостей»; */
