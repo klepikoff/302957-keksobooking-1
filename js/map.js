@@ -1,5 +1,6 @@
 'use strict';
 
+// module3-task1
 function getRandomValue(arrayValues) {
   return arrayValues[Math.floor(Math.random() * arrayValues.length)];
 }
@@ -21,6 +22,7 @@ function getRandomArray(arrayValues) {
   }
   return newArray;
 }
+var NUMBER_PINS = 8;
 
 var BOOK_TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var BOOK_TYPE = ['flat', 'house', 'bungalo'];
@@ -43,7 +45,7 @@ map.classList.remove('map--faded');
 
 // задание 1
 var book = [];
-for (var i = 0; i < 8; i++) {
+for (var i = 0; i < NUMBER_PINS; i++) {
   var addrX = randomInteger(300, 900);
   var addrY = randomInteger(150, 500);
 
@@ -75,12 +77,14 @@ for (var i = 0; i < 8; i++) {
 var pinsOnMap = map.querySelector('.map__pins');
 var pinsTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-for (i = 0; i < 8; i++) {
+for (i = 0; i < NUMBER_PINS; i++) {
   var template = pinsTemplate.cloneNode(true);
   var fragment = document.createDocumentFragment();
 
   template.setAttribute('style', 'left: ' + (book[i].location.x - PIN_WIDTH / 2) + 'px; top: ' + (book[i].location.y - PIN_HEIGHT) + 'px');
   template.querySelector('img').setAttribute('src', book[i].author.avatar);
+
+  template.dataset.pinId = i;
 
   fragment.appendChild(template);
   pinsOnMap.appendChild(fragment);
@@ -96,7 +100,9 @@ elemParent.insertBefore(elem, elemBefore);
 
 var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
 
+
 function renderPopup(anyBook) {
+
   var articlePopup = articleTemplatePopup.cloneNode(true);
 
   //  заменили название
@@ -147,9 +153,40 @@ function renderPopup(anyBook) {
   // заменили аватар
   articlePopup.querySelector('img').setAttribute('src', anyBook.author.avatar);
 
-  return articlePopup;
+  var fragmentPopup = document.createDocumentFragment();
+
+  if (elem.querySelector('article.map__card')) {
+    elem.querySelector('article.map__card').remove();
+  }
+
+  fragmentPopup.appendChild(articlePopup);
+  elem.appendChild(fragmentPopup);
 }
 
-var fragmentPopup = document.createDocumentFragment();
-fragmentPopup.appendChild(renderPopup(book[0]));
-elem.appendChild(fragmentPopup);
+
+// module4-task1
+var mapPin = document.querySelector('.map__pin--main');
+var address = document.getElementById('address');
+
+mapPin.addEventListener('mouseup', function () {
+  map.classList.remove('map--faded');
+  document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+  document.querySelector('.notice__form').removeAttribute('disabled');
+  var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
+  var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
+  address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
+
+});
+
+var parentPin = document.querySelector('.map__pins');
+parentPin.addEventListener('click', function (evt) {
+
+  var targetPin = evt.target;
+  if (targetPin.tagName === 'IMG') {
+    targetPin = targetPin.parentElement;
+  }
+
+  if (targetPin.dataset.pinId !== void 0) {
+    renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
+  }
+});
