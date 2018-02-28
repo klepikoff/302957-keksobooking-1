@@ -100,6 +100,7 @@ elemParent.insertBefore(elem, elemBefore);
 
 var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
 
+
 function renderPopup(anyBook) {
 
   var articlePopup = articleTemplatePopup.cloneNode(true);
@@ -153,6 +154,11 @@ function renderPopup(anyBook) {
   articlePopup.querySelector('img').setAttribute('src', anyBook.author.avatar);
 
   var fragmentPopup = document.createDocumentFragment();
+
+  if (elem.querySelector('article.map__card')) {
+    elem.querySelector('article.map__card').remove();
+  }
+
   fragmentPopup.appendChild(articlePopup);
   elem.appendChild(fragmentPopup);
 }
@@ -182,10 +188,5 @@ parentPin.addEventListener('click', function (evt) {
 
   if (targetPin.dataset.pinId !== void 0) {
     renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
-  }
-
-  var articlePopupAll = document.querySelectorAll('article.map__card');
-  if (articlePopupAll.length >= 2) {
-    articlePopupAll[0].remove();
   }
 });
