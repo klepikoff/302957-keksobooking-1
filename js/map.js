@@ -153,10 +153,14 @@ function renderPopup(anyBook) {
   articlePopup.querySelector('img').setAttribute('src', anyBook.author.avatar);
 
   var fragmentPopup = document.createDocumentFragment();
+
+  if (elem.querySelector('article.map__card')) {
+    elem.querySelector('article.map__card').remove();
+  }
+
   fragmentPopup.appendChild(articlePopup);
   elem.appendChild(fragmentPopup);
 }
-
 
 // module4-task1
 var mapPin = document.querySelector('.map__pin--main');
