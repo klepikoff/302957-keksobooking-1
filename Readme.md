@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Никита Клепиков](https://up.htmlacademy.ru/javascript/12/user/302957).
-* Наставник: `Неизвестно`.
+* Наставник: Денис Лапаев.
 
 ---
 

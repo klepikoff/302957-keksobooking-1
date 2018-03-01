@@ -100,6 +100,7 @@ elemParent.insertBefore(elem, elemBefore);
 
 var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
 
+
 function renderPopup(anyBook) {
 
   var articlePopup = articleTemplatePopup.cloneNode(true);
