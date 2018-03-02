@@ -195,7 +195,6 @@ parentPin.addEventListener('click', function (evt) {
   }
 });
 
-
 // module4-task2
 var appartmentPrice = document.getElementById('price');
 
