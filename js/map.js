@@ -2,6 +2,7 @@
 
 // module3-task1
 (function () {
+  window.map = {};
   var NUMBER_PINS = 8;
 
   var BOOK_TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
@@ -26,25 +27,25 @@
   // задание 1
   var book = [];
   for (var i = 0; i < NUMBER_PINS; i++) {
-    var addrX = window.randomInteger(300, 900);
-    var addrY = window.randomInteger(150, 500);
+    var addrX = window.util.randomInteger(300, 900);
+    var addrY = window.util.randomInteger(150, 500);
 
     book[i] = {
       author: {
-        avatar: 'img/avatars/user' + window.getUniqueValue(BOOK_AVATAR) + '.png'
+        avatar: 'img/avatars/user' + window.util.getUniqueValue(BOOK_AVATAR) + '.png'
       },
       offer: {
-        title: window.getUniqueValue(BOOK_TITLE),
+        title: window.util.getUniqueValue(BOOK_TITLE),
         address: addrX + ', ' + addrY,
-        price: window.randomInteger(1000, 1000000),
-        type: window.getRandomValue(BOOK_TYPE),
-        rooms: window.randomInteger(1, 5),
-        guests: window.randomInteger(1, 50),
-        checkin: window.getRandomValue(BOOK_TIME),
-        checkout: window.getRandomValue(BOOK_TIME),
-        features: window.getRandomArray(BOOK_FEATURE),
+        price: window.util.randomInteger(1000, 1000000),
+        type: window.util.getRandomValue(BOOK_TYPE),
+        rooms: window.util.randomInteger(1, 5),
+        guests: window.util.randomInteger(1, 50),
+        checkin: window.util.getRandomValue(BOOK_TIME),
+        checkout: window.util.getRandomValue(BOOK_TIME),
+        features: window.util.getRandomArray(BOOK_FEATURE),
         description: '',
-        photos: window.getRandomArray(BOOK_PHOTO)
+        photos: window.util.getRandomArray(BOOK_PHOTO)
       },
       location: {
         x: addrX,
@@ -81,7 +82,7 @@
   var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
 
 
-  window.renderPopup = function (anyBook) {
+  window.map.renderPopup = function (anyBook) {
 
     var articlePopup = articleTemplatePopup.cloneNode(true);
 
@@ -148,16 +149,6 @@
   var mapPin = document.querySelector('.map__pin--main');
   var address = document.getElementById('address');
 
-  mapPin.addEventListener('mouseup', function () {
-    map.classList.remove('map--faded');
-    document.querySelector('.notice__form').classList.remove('notice__form--disabled');
-    document.querySelector('.notice__form').removeAttribute('disabled');
-    var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
-    var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
-    address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
-
-  });
-
   var parentPin = document.querySelector('.map__pins');
   parentPin.addEventListener('click', function (evt) {
 
@@ -167,12 +158,69 @@
     }
 
     if (targetPin.dataset.pinId !== void 0) {
-      window.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
+      window.map.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
     }
 
     var articlePopupAll = document.querySelectorAll('article.map__card');
     if (articlePopupAll.length >= 2) {
       articlePopupAll[0].remove();
     }
+  });
+
+  // module5-task2
+  mapPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    map.classList.remove('map--faded');
+    document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+    document.querySelector('.notice__form').removeAttribute('disabled');
+    var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
+    var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
+    address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      if ((mapPin.offsetTop - shift.y) < 150) {
+        mapPin.style.top = 150 + 'px';
+      } else if ((mapPin.offsetTop - shift.y) > 500) {
+        mapPin.style.top = 500 + 'px';
+      } else {
+        mapPin.style.top = (mapPin.offsetTop - shift.y) + 'px';
+      }
+
+      if ((mapPin.offsetLeft - shift.x) > pinsOnMap.offsetWidth) {
+        mapPin.style.left = pinsOnMap.offsetWidth + 'px';
+      } else if ((mapPin.offsetLeft - shift.x) < 0) {
+        mapPin.style.left = '0 px';
+      } else {
+        mapPin.style.left = (mapPin.offsetLeft - shift.x) + 'px';
+      }
+    };
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
   });
 })();
