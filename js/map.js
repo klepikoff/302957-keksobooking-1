@@ -27,25 +27,25 @@
   // задание 1
   var book = [];
   for (var i = 0; i < NUMBER_PINS; i++) {
-    var addrX = window.util.randomInteger(300, 900);
-    var addrY = window.util.randomInteger(150, 500);
+    var addrX = window.utils.randomInteger(300, 900);
+    var addrY = window.utils.randomInteger(150, 500);
 
     book[i] = {
       author: {
-        avatar: 'img/avatars/user' + window.util.getUniqueValue(BOOK_AVATAR) + '.png'
+        avatar: 'img/avatars/user' + window.utils.getUniqueValue(BOOK_AVATAR) + '.png'
       },
       offer: {
-        title: window.util.getUniqueValue(BOOK_TITLE),
+        title: window.utils.getUniqueValue(BOOK_TITLE),
         address: addrX + ', ' + addrY,
-        price: window.util.randomInteger(1000, 1000000),
-        type: window.util.getRandomValue(BOOK_TYPE),
-        rooms: window.util.randomInteger(1, 5),
-        guests: window.util.randomInteger(1, 50),
-        checkin: window.util.getRandomValue(BOOK_TIME),
-        checkout: window.util.getRandomValue(BOOK_TIME),
-        features: window.util.getRandomArray(BOOK_FEATURE),
+        price: window.utils.randomInteger(1000, 1000000),
+        type: window.utils.getRandomValue(BOOK_TYPE),
+        rooms: window.utils.randomInteger(1, 5),
+        guests: window.utils.randomInteger(1, 50),
+        checkin: window.utils.getRandomValue(BOOK_TIME),
+        checkout: window.utils.getRandomValue(BOOK_TIME),
+        features: window.utils.getRandomArray(BOOK_FEATURE),
         description: '',
-        photos: window.util.getRandomArray(BOOK_PHOTO)
+        photos: window.utils.getRandomArray(BOOK_PHOTO)
       },
       location: {
         x: addrX,
@@ -202,10 +202,10 @@
         mapPin.style.top = (mapPin.offsetTop - shift.y) + 'px';
       }
 
-      if ((mapPin.offsetLeft - shift.x) > pinsOnMap.offsetWidth) {
-        mapPin.style.left = pinsOnMap.offsetWidth - (PIN_WIDTH) + 'px';
-      } else if ((mapPin.offsetLeft - shift.x) < 0) {
-        mapPin.style.left = PIN_WIDTH + 'px';
+      if ((mapPin.offsetLeft - shift.x) > pinsOnMap.offsetWidth - (PIN_WIDTH / 2)) {
+        mapPin.style.left = pinsOnMap.offsetWidth - (PIN_WIDTH / 2) + 'px';
+      } else if ((mapPin.offsetLeft - shift.x) < (PIN_WIDTH / 2)) {
+        mapPin.style.left = (PIN_WIDTH / 2) + 'px';
       } else {
         mapPin.style.left = (mapPin.offsetLeft - shift.x) + 'px';
       }
