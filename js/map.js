@@ -167,6 +167,7 @@
     }
   });
 
+
   // module5-task2
   mapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
