@@ -172,9 +172,8 @@
     map.classList.remove('map--faded');
     document.querySelector('.notice__form').classList.remove('notice__form--disabled');
     document.querySelector('.notice__form').removeAttribute('disabled');
-    var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
-    var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
-    address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
+    var newAddressLeft = 0;
+    var newAddressTop = 0;
 
     var startCoords = {
       x: evt.clientX,
@@ -183,6 +182,11 @@
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
+
+
+      newAddressLeft = mapPin.style.left;
+      newAddressTop = mapPin.style.top;
+      address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -211,6 +215,11 @@
       }
     };
     var onMouseUp = function (upEvt) {
+      newAddressLeft = mapPin.offsetLeft;
+      newAddressTop = mapPin.offsetTop;
+
+      address.setAttribute('value', newAddressLeft + 'px, ' + newAddressTop + 'px');
+
       upEvt.preventDefault();
 
       document.removeEventListener('mousemove', onMouseMove);
@@ -219,6 +228,5 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-
   });
 })();
