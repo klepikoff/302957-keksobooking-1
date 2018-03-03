@@ -81,7 +81,6 @@
 
   var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
 
-
   window.map.renderPopup = function (anyBook) {
 
     var articlePopup = articleTemplatePopup.cloneNode(true);
@@ -158,7 +157,10 @@
     }
 
     if (targetPin.dataset.pinId !== void 0) {
-      window.map.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
+      var successHandler = function (book) {
+        window.map.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]); //  не book, а данные с сервера
+      };
+      window.backend.load(successHandler, errorHandler);
     }
     var articlePopupAll = document.querySelectorAll('article.map__card');
     if (articlePopupAll.length >= 2) {
@@ -172,9 +174,8 @@
     map.classList.remove('map--faded');
     document.querySelector('.notice__form').classList.remove('notice__form--disabled');
     document.querySelector('.notice__form').removeAttribute('disabled');
-    var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
-    var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
-    address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
+    var newAddressLeft = 0;
+    var newAddressTop = 0;
 
     var startCoords = {
       x: evt.clientX,
@@ -183,6 +184,11 @@
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
+
+
+      newAddressLeft = mapPin.style.left;
+      newAddressTop = mapPin.style.top;
+      address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -211,6 +217,11 @@
       }
     };
     var onMouseUp = function (upEvt) {
+      newAddressLeft = mapPin.offsetLeft;
+      newAddressTop = mapPin.offsetTop;
+
+      address.setAttribute('value', newAddressLeft + 'px, ' + newAddressTop + 'px');
+
       upEvt.preventDefault();
 
       document.removeEventListener('mousemove', onMouseMove);
@@ -219,6 +230,17 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-
   });
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
 })();
