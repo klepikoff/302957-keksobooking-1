@@ -2,6 +2,7 @@
 
 // module3-task1
 (function () {
+  window.map = {};
   var NUMBER_PINS = 8;
 
   var BOOK_TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
@@ -26,25 +27,25 @@
   // задание 1
   var book = [];
   for (var i = 0; i < NUMBER_PINS; i++) {
-    var addrX = window.randomInteger(300, 900);
-    var addrY = window.randomInteger(150, 500);
+    var addrX = window.util.randomInteger(300, 900);
+    var addrY = window.util.randomInteger(150, 500);
 
     book[i] = {
       author: {
-        avatar: 'img/avatars/user' + window.getUniqueValue(BOOK_AVATAR) + '.png'
+        avatar: 'img/avatars/user' + window.util.getUniqueValue(BOOK_AVATAR) + '.png'
       },
       offer: {
-        title: window.getUniqueValue(BOOK_TITLE),
+        title: window.util.getUniqueValue(BOOK_TITLE),
         address: addrX + ', ' + addrY,
-        price: window.randomInteger(1000, 1000000),
-        type: window.getRandomValue(BOOK_TYPE),
-        rooms: window.randomInteger(1, 5),
-        guests: window.randomInteger(1, 50),
-        checkin: window.getRandomValue(BOOK_TIME),
-        checkout: window.getRandomValue(BOOK_TIME),
-        features: window.getRandomArray(BOOK_FEATURE),
+        price: window.util.randomInteger(1000, 1000000),
+        type: window.util.getRandomValue(BOOK_TYPE),
+        rooms: window.util.randomInteger(1, 5),
+        guests: window.util.randomInteger(1, 50),
+        checkin: window.util.getRandomValue(BOOK_TIME),
+        checkout: window.util.getRandomValue(BOOK_TIME),
+        features: window.util.getRandomArray(BOOK_FEATURE),
         description: '',
-        photos: window.getRandomArray(BOOK_PHOTO)
+        photos: window.util.getRandomArray(BOOK_PHOTO)
       },
       location: {
         x: addrX,
@@ -81,7 +82,7 @@
   var articleTemplatePopup = document.querySelector('template').content.querySelector('article.map__card');
 
 
-  window.renderPopup = function (anyBook) {
+  window.map.renderPopup = function (anyBook) {
 
     var articlePopup = articleTemplatePopup.cloneNode(true);
 
@@ -157,7 +158,7 @@
     }
 
     if (targetPin.dataset.pinId !== void 0) {
-      window.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
+      window.map.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
     }
 
     var articlePopupAll = document.querySelectorAll('article.map__card');
@@ -167,7 +168,7 @@
   });
 
   // module5-task2
-    mapPin.addEventListener('mousedown', function (evt) {
+  mapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     map.classList.remove('map--faded');
