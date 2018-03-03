@@ -27,25 +27,25 @@
   // задание 1
   var book = [];
   for (var i = 0; i < NUMBER_PINS; i++) {
-    var addrX = window.util.randomInteger(300, 900);
-    var addrY = window.util.randomInteger(150, 500);
+    var addrX = window.utils.randomInteger(300, 900);
+    var addrY = window.utils.randomInteger(150, 500);
 
     book[i] = {
       author: {
-        avatar: 'img/avatars/user' + window.util.getUniqueValue(BOOK_AVATAR) + '.png'
+        avatar: 'img/avatars/user' + window.utils.getUniqueValue(BOOK_AVATAR) + '.png'
       },
       offer: {
-        title: window.util.getUniqueValue(BOOK_TITLE),
+        title: window.utils.getUniqueValue(BOOK_TITLE),
         address: addrX + ', ' + addrY,
-        price: window.util.randomInteger(1000, 1000000),
-        type: window.util.getRandomValue(BOOK_TYPE),
-        rooms: window.util.randomInteger(1, 5),
-        guests: window.util.randomInteger(1, 50),
-        checkin: window.util.getRandomValue(BOOK_TIME),
-        checkout: window.util.getRandomValue(BOOK_TIME),
-        features: window.util.getRandomArray(BOOK_FEATURE),
+        price: window.utils.randomInteger(1000, 1000000),
+        type: window.utils.getRandomValue(BOOK_TYPE),
+        rooms: window.utils.randomInteger(1, 5),
+        guests: window.utils.randomInteger(1, 50),
+        checkin: window.utils.getRandomValue(BOOK_TIME),
+        checkout: window.utils.getRandomValue(BOOK_TIME),
+        features: window.utils.getRandomArray(BOOK_FEATURE),
         description: '',
-        photos: window.util.getRandomArray(BOOK_PHOTO)
+        photos: window.utils.getRandomArray(BOOK_PHOTO)
       },
       location: {
         x: addrX,
@@ -160,13 +160,11 @@
     if (targetPin.dataset.pinId !== void 0) {
       window.map.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
     }
-
     var articlePopupAll = document.querySelectorAll('article.map__card');
     if (articlePopupAll.length >= 2) {
       articlePopupAll[0].remove();
     }
   });
-
   // module5-task2
   mapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -174,9 +172,8 @@
     map.classList.remove('map--faded');
     document.querySelector('.notice__form').classList.remove('notice__form--disabled');
     document.querySelector('.notice__form').removeAttribute('disabled');
-    var newAddressLeft = mapPin.offsetLeft - PIN_WIDTH / 2;
-    var newAddressTop = mapPin.offsetTop + PIN_HEIGHT / 2;
-    address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
+    var newAddressLeft = 0;
+    var newAddressTop = 0;
 
     var startCoords = {
       x: evt.clientX,
@@ -185,6 +182,11 @@
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
+
+
+      newAddressLeft = mapPin.style.left;
+      newAddressTop = mapPin.style.top;
+      address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -204,15 +206,20 @@
         mapPin.style.top = (mapPin.offsetTop - shift.y) + 'px';
       }
 
-      if ((mapPin.offsetLeft - shift.x) > pinsOnMap.offsetWidth) {
-        mapPin.style.left = pinsOnMap.offsetWidth + 'px';
-      } else if ((mapPin.offsetLeft - shift.x) < 0) {
-        mapPin.style.left = '0 px';
+      if ((mapPin.offsetLeft - shift.x) > pinsOnMap.offsetWidth - (PIN_WIDTH / 2)) {
+        mapPin.style.left = pinsOnMap.offsetWidth - (PIN_WIDTH / 2) + 'px';
+      } else if ((mapPin.offsetLeft - shift.x) < (PIN_WIDTH / 2)) {
+        mapPin.style.left = (PIN_WIDTH / 2) + 'px';
       } else {
         mapPin.style.left = (mapPin.offsetLeft - shift.x) + 'px';
       }
     };
     var onMouseUp = function (upEvt) {
+      newAddressLeft = mapPin.offsetLeft;
+      newAddressTop = mapPin.offsetTop;
+
+      address.setAttribute('value', newAddressLeft + 'px, ' + newAddressTop + 'px');
+
       upEvt.preventDefault();
 
       document.removeEventListener('mousemove', onMouseMove);
@@ -221,6 +228,5 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-
   });
 })();
