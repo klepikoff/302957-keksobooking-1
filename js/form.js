@@ -78,4 +78,10 @@
       accessCapacity.querySelector('option[value="4"]').setAttribute('selected', 'selected');
     }
   });
+  var formSubmit = document.querySelector('.form__submit');
+  formSubmit.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(formSubmit));
+    evt.preventDefault();
+    document.querySelector('.notice__form').reset();
+  });
 })();
