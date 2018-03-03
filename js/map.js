@@ -160,14 +160,11 @@
     if (targetPin.dataset.pinId !== void 0) {
       window.map.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]);
     }
-
     var articlePopupAll = document.querySelectorAll('article.map__card');
     if (articlePopupAll.length >= 2) {
       articlePopupAll[0].remove();
     }
   });
-
-
   // module5-task2
   mapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -206,9 +203,9 @@
       }
 
       if ((mapPin.offsetLeft - shift.x) > pinsOnMap.offsetWidth) {
-        mapPin.style.left = pinsOnMap.offsetWidth + 'px';
+        mapPin.style.left = pinsOnMap.offsetWidth - (PIN_WIDTH) + 'px';
       } else if ((mapPin.offsetLeft - shift.x) < 0) {
-        mapPin.style.left = '0 px';
+        mapPin.style.left = PIN_WIDTH + 'px';
       } else {
         mapPin.style.left = (mapPin.offsetLeft - shift.x) + 'px';
       }
