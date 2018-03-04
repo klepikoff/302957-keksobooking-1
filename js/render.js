@@ -1,51 +1,41 @@
-// Файл similar.js
 'use strict';
-var mapFilter = document.querySelector('.map__filters');
-
 (function () {
-  var coatColor;
-  var eyesColor;
-  var pins = [];
+  var mapFilter = document.querySelector('.map__filters');
 
-  var getRank = function (pin) {
-    var rank = 0;
+  var onLoad = function (book) {
+    var bookCopy = book.slice();
+    console.log(bookCopy);
 
-    if (pins.colorCoat === coatColor) {
-      rank += 2;
-    }
-    if (pins.colorEyes === eyesColor) {
-      rank += 1;
-    }
+    var housingType = document.getElementById('housing-type');
+    var housingPrice = document.getElementById('housing-price');
+    var housingRoom = document.getElementById('housing-rooms');
+    var housingGuest = document.getElementById('housing-guests');
+    var housingFeature = document.getElementById('housing-features');
 
-    return rank;
-  }
+    var housingSelection = function (housingSelect, array) {
+      var sel = housingSelect.addEventListener('change', function () {
+        var selectedHousingSelect = housingSelect.options[housingSelect.selectedIndex].value;
 
-  var updatepins = function () {
-    window.render(pins.slice().sort(function (left, right) {
-      var rankDiff = getRank(right) - getRank(left);
-      if (rankDiff === 0) {
-        rankDiff = pins.indexOf(left) - pins.indexOf(right);
-      }
-      return rankDiff;
-    }));
-  }
+        var modifiedArray = array.filter(function(elem) {
+          if (selectedHousingSelect === elem.offer.type) {
+            return true;
+          } else if (selectedHousingSelect === 'any') {
+            return array;
+          } else {
+            return false;
+          }
+        });
 
-  window.wizard.onEyesChange = function (color) {
-    eyesColor = color;
-    updatepins();
-  }
+        return modifiedArray;
+      });
+      return sel;
+    };
 
-  window.wizard.onCoatChange = function (color) {
-    coatColor = color;
-    updatepins();
-  }
-
-  var successHandler = function (data) {
-    pins = data;
-    updatepins();
+    console.log(housingSelection(housingType, bookCopy));
   };
 
-  var errorHandler = function (errorMessage) {
+  window.backend.load(onLoad, onError);
+  var onError = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -55,8 +45,5 @@ var mapFilter = document.querySelector('.map__filters');
 
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
-  }
-
-  var URL = 'https://js.dump.academy/code-and-magick/data';
-  window.load(URL, successHandler, errorHandler);
+  };
 })();

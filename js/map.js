@@ -95,7 +95,6 @@
   };
   var onLoad = function (book) {
 
-
     for (var i = 0; i < NUMBER_PINS; i++) {
       var template = pinsTemplate.cloneNode(true);
       var fragment = document.createDocumentFragment();
