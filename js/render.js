@@ -2,37 +2,40 @@
 (function () {
   var mapFilter = document.querySelector('.map__filters');
 
-  var onLoad = function (book) {
-    var bookCopy = book.slice();
-    console.log(bookCopy);
+  var onLoad = function (bookings) {
+    var bookingsCopy = bookings.slice();
+    console.log(bookingsCopy);
 
     var housingType = document.getElementById('housing-type');
     var housingPrice = document.getElementById('housing-price');
-    var housingRoom = document.getElementById('housing-rooms');
-    var housingGuest = document.getElementById('housing-guests');
-    var housingFeature = document.getElementById('housing-features');
+    // var housingRoom = document.getElementById('housing-rooms');
+    // var housingGuest = document.getElementById('housing-guests');
+    // var housingFeature = document.getElementById('housing-features');
 
-    var housingSelection = function (housingSelect, array) {
-      var sel = housingSelect.addEventListener('change', function () {
-        var selectedHousingSelect = housingSelect.options[housingSelect.selectedIndex].value;
 
-        var modifiedArray = array.filter(function(elem) {
-          if (selectedHousingSelect === elem.offer.type) {
-            return true;
-          } else if (selectedHousingSelect === 'any') {
-            return array;
-          } else {
-            return false;
-          }
-        });
 
-        return modifiedArray;
+    var housingSelectionType = function (housingType, array) {
+      housingType.addEventListener('change', function () {
+        var selectedHousingType = housingType.options[housingType.selectedIndex].value;
+        if (selectedHousingType !== 'any') {
+          var bookingsSelected = bookingsCopy.filter(function (array) {
+            if (selectedHousingType === array.offer.type) {
+              return true
+            }
+          });
+        } else {
+          bookingsSelected = bookingsCopy;
+        }
+        console.log(bookingsSelected);
       });
-      return sel;
     };
 
-    console.log(housingSelection(housingType, bookCopy));
+    housingSelectionType(housingType, bookingsCopy);
+    // housingSelection(housingTPrice, bookingsCopy);
   };
+
+
+
 
   window.backend.load(onLoad, onError);
   var onError = function (errorMessage) {
@@ -45,5 +48,6 @@
 
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
-  };
-})();
+    };
+  }
+)();

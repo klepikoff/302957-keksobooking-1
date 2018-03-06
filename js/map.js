@@ -3,7 +3,6 @@
 // module3-task1
 (function () {
   window.map = {};
-  var NUMBER_PINS = 8;
 
   var BOOK_TYPE_NAME = {
     'flat': 'Квартира',
@@ -13,7 +12,7 @@
 
   var PIN_WIDTH = 62;
   var PIN_HEIGHT = 84;
-
+  var FEATURES_NUMBER = 6;
 
   var map = document.querySelector('.map');
   map.classList.remove('map--faded');
@@ -57,7 +56,7 @@
     // заменили удобства
     var articlePopupFeatures = articlePopup.querySelector('.popup__features');
 
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < FEATURES_NUMBER; i++) {
       articlePopupFeatures.removeChild(articlePopup.querySelector('li'));
     }
 
@@ -93,14 +92,14 @@
     fragmentPopup.appendChild(articlePopup);
     elem.appendChild(fragmentPopup);
   };
-  var onLoad = function (book) {
+  var onLoad = function (bookings) {
 
-    for (var i = 0; i < NUMBER_PINS; i++) {
+    for (var i = 0; i < bookings.length; i++) {
       var template = pinsTemplate.cloneNode(true);
       var fragment = document.createDocumentFragment();
 
-      template.querySelector('img').setAttribute('src', book[i].author.avatar);
-      template.setAttribute('style', 'left: ' + (book[i].location.x - PIN_WIDTH / 2) + 'px; top: ' + (book[i].location.y - PIN_HEIGHT) + 'px');
+      template.querySelector('img').setAttribute('src', bookings[i].author.avatar);
+      template.setAttribute('style', 'left: ' + (bookings[i].location.x - PIN_WIDTH / 2) + 'px; top: ' + (bookings[i].location.y - PIN_HEIGHT) + 'px');
 
       template.dataset.pinId = i;
 
@@ -120,7 +119,7 @@
       }
 
       if (targetPin.dataset.pinId !== void 0) {
-        window.map.renderPopup(book[parseInt(targetPin.dataset.pinId, 10)]); //  не book, а данные с сервера
+        window.map.renderPopup(bookings[parseInt(targetPin.dataset.pinId, 10)]); //  не book, а данные с сервера
       }
       var articlePopupAll = document.querySelectorAll('article.map__card');
       if (articlePopupAll.length >= 2) {
@@ -148,7 +147,7 @@
         newAddressTop = mapPin.style.top;
         address.setAttribute('value', newAddressLeft + ', ' + newAddressTop);
 
-        var shift = {
+        var shift = { // перемещение
           x: startCoords.x - moveEvt.clientX,
           y: startCoords.y - moveEvt.clientY
         };
